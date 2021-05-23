@@ -1,12 +1,13 @@
 package com.thewyp.pagingexample.ui.remote
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.thewyp.pagingexample.api.CatApi
 import com.thewyp.pagingexample.data.model.Cat
 import java.lang.Exception
 
-private const val STARTING_PAGE_INDEX = 1
+const val STARTING_PAGE_INDEX = 1
 
 class CatsPagingSource(private val catApi: CatApi) : PagingSource<Int, Cat>() {
 
@@ -15,6 +16,17 @@ class CatsPagingSource(private val catApi: CatApi) : PagingSource<Int, Cat>() {
         // We need to get the previous key (or next key if previous is null) of the page
         // that was closest to the most recently accessed index.
         // Anchor position is the most recently accessed index
+        if (state.anchorPosition != null) {
+            val closestPageToPosition = state.closestPageToPosition(state.anchorPosition!!)
+            if (closestPageToPosition != null) {
+                if (closestPageToPosition.prevKey != null) {
+                    return closestPageToPosition.prevKey!!.plus(1)
+                }
+                if (closestPageToPosition.nextKey != null) {
+                    return closestPageToPosition.nextKey!!.minus(1)
+                }
+            }
+        }
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)

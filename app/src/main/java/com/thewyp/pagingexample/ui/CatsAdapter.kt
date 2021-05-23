@@ -8,37 +8,45 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.thewyp.pagingexample.R
 import com.thewyp.pagingexample.data.model.Cat
+import com.thewyp.pagingexample.data.model.UiModel
 import com.thewyp.pagingexample.databinding.ItemCatBinding
 
 class CatsAdapter :
-    PagingDataAdapter<Cat, CatsAdapter.CatsHolder>(object : DiffUtil.ItemCallback<Cat>() {
-        override fun areItemsTheSame(oldItem: Cat, newItem: Cat): Boolean {
+    PagingDataAdapter<UiModel, RecyclerView.ViewHolder>(object : DiffUtil.ItemCallback<UiModel>() {
+        override fun areItemsTheSame(oldItem: UiModel, newItem: UiModel): Boolean {
             return newItem == oldItem
         }
 
-        override fun areContentsTheSame(oldItem: Cat, newItem: Cat): Boolean {
-            return oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: UiModel, newItem: UiModel): Boolean {
+            return (oldItem is UiModel.CatItem && newItem is UiModel.CatItem
+                    && oldItem.cat.id == newItem.cat.id)
+                    || (oldItem is UiModel.SeparatorItem && newItem is UiModel.SeparatorItem
+                    && oldItem.description == newItem.description)
         }
 
     }) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatsHolder {
-        return CatsHolder(
-            ItemCatBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        )
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is UiModel.CatItem -> R.layout.item_cat
+            is UiModel.SeparatorItem -> R.layout.separator_view_item
+            null -> throw UnsupportedOperationException("Unknown view")
+        }
     }
 
-    override fun onBindViewHolder(holder: CatsHolder, position: Int) {
-        holder.bind(getItem(position))
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == R.layout.item_cat)
+            CatsHolder.create(parent) else SeparatorViewHolder.create(parent)
     }
 
-    inner class CatsHolder(private val binding: ItemCatBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Cat?) {
-            binding.imageCat.load(item?.url) {
-                placeholder(R.drawable.ic_launcher_background)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val uiModel = getItem(position)
+        uiModel.let {
+            when (uiModel) {
+                is UiModel.CatItem -> (holder as CatsHolder).bind(uiModel.cat)
+                is UiModel.SeparatorItem -> (holder as SeparatorViewHolder).bind(uiModel.description)
             }
         }
-
     }
 }

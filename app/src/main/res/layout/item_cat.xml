@@ -15,4 +15,13 @@
         android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textColor="#fff"
+        tools:text="1" />
+
 </androidx.cardview.widget.CardView>

@@ -13,10 +13,26 @@
         <action
             android:id="@+id/action_mainFragment_to_remoteFragment"
             app:destination="@id/remoteFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_localFragment"
+            app:destination="@id/localFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_mediatorFragment"
+            app:destination="@id/mediatorFragment" />
     </fragment>
     <fragment
         android:id="@+id/remoteFragment"
         android:name="com.thewyp.pagingexample.ui.remote.RemoteFragment"
         android:label="Network Only"
+        tools:layout="@layout/fragment_remote" />
+    <fragment
+        android:id="@+id/localFragment"
+        android:name="com.thewyp.pagingexample.ui.local.LocalFragment"
+        android:label="Database Only"
+        tools:layout="@layout/fragment_remote" />
+    <fragment
+        android:id="@+id/mediatorFragment"
+        android:name="com.thewyp.pagingexample.ui.mediator.MediatorFragment"
+        android:label="Network Cache"
         tools:layout="@layout/fragment_remote" />
 </navigation>

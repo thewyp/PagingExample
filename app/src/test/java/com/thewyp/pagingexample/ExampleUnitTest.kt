@@ -1,5 +1,8 @@
 package com.thewyp.pagingexample
 
+import com.thewyp.pagingexample.di.AppModule
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.junit.Test
 
 import org.junit.Assert.*

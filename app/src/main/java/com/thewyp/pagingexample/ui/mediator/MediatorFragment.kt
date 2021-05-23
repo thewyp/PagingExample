@@ -1,4 +1,4 @@
-package com.thewyp.pagingexample.ui.remote
+package com.thewyp.pagingexample.ui.mediator
 
 import android.os.Bundle
 import android.view.View
@@ -14,15 +14,14 @@ import com.thewyp.pagingexample.ui.CatsLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RemoteFragment : Fragment(R.layout.fragment_remote) {
+class MediatorFragment : Fragment(R.layout.fragment_remote) {
 
     private lateinit var binding: FragmentRemoteBinding
 
-    private val viewModel: RemoteViewModel by viewModels()
+    private val viewModel by viewModels<MediatorViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentRemoteBinding.bind(view)
-
         val adapter = CatsAdapter()
 
         binding.apply {
@@ -38,13 +37,17 @@ class RemoteFragment : Fragment(R.layout.fragment_remote) {
 
         adapter.addLoadStateListener { loadState ->
             binding.apply {
-                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
-                buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
-                textViewError.isVisible = loadState.source.refresh is LoadState.Error
+                progressBar.isVisible = loadState.mediator?.refresh is LoadState.Loading
+                recyclerView.isVisible = loadState.mediator?.refresh is LoadState.NotLoading
+                buttonRetry.isVisible = loadState.mediator?.refresh is LoadState.Error
+                textViewError.isVisible = loadState.mediator?.refresh is LoadState.Error
+
+                buttonRetry.setOnClickListener {
+                    adapter.retry()
+                }
 
                 // empty view
-                if (loadState.source.refresh is LoadState.NotLoading &&
+                if (loadState.mediator?.refresh is LoadState.NotLoading &&
                     loadState.append.endOfPaginationReached &&
                     adapter.itemCount < 1
                 ) {

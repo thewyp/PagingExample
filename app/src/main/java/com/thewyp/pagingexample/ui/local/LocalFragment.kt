@@ -1,4 +1,4 @@
-package com.thewyp.pagingexample.ui.remote
+package com.thewyp.pagingexample.ui.local
 
 import android.os.Bundle
 import android.view.View
@@ -14,11 +14,11 @@ import com.thewyp.pagingexample.ui.CatsLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RemoteFragment : Fragment(R.layout.fragment_remote) {
+class LocalFragment : Fragment(R.layout.fragment_remote) {
 
     private lateinit var binding: FragmentRemoteBinding
 
-    private val viewModel: RemoteViewModel by viewModels()
+    private val viewModel: LocalViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentRemoteBinding.bind(view)

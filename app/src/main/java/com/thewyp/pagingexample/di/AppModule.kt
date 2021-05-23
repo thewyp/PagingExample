@@ -1,12 +1,16 @@
 package com.thewyp.pagingexample.di
 
+import android.content.Context
+import androidx.room.Room
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.thewyp.pagingexample.BuildConfig
 import com.thewyp.pagingexample.api.CatApi
+import com.thewyp.pagingexample.data.db.CatDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -43,7 +47,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideOkHttp(
-        interceptor: HttpLoggingInterceptor,
+        interceptor: Interceptor,
         httpLoggingInterceptor: HttpLoggingInterceptor
     ) = OkHttpClient.Builder()
         .addInterceptor(interceptor)
@@ -65,6 +69,17 @@ class AppModule {
     @Provides
     @Singleton
     fun provideCatApi(retrofit: Retrofit) = retrofit.create(CatApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDatabase(
+        @ApplicationContext appContext: Context
+    ): CatDatabase {
+        return Room.databaseBuilder(
+            appContext, CatDatabase::class.java,
+            "cats.db"
+        ).build()
+    }
 
 
     companion object {

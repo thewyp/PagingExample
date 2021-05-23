@@ -15,8 +15,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val binding = FragmentMainBinding.bind(view)
 
         binding.apply {
+            dbOnly.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_localFragment)
+            }
             networkOnly.setOnClickListener {
                 findNavController().navigate(R.id.action_mainFragment_to_remoteFragment)
+            }
+            dbNetwork.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_mediatorFragment)
             }
         }
     }
